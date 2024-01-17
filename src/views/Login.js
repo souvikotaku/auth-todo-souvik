@@ -10,6 +10,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import Swal from "sweetalert2";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -43,8 +44,15 @@ const ErrorText = styled(FormHelperText)({
 
 const Login = () => {
   const handleSubmit = (values, { setSubmitting }) => {
-    alert("Login successful!");
-    setSubmitting(false);
+    setTimeout(() => {
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      setSubmitting(false);
+    }, 1000);
   };
 
   return (
