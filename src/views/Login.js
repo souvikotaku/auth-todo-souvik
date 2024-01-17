@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   Container,
   Typography,
   CssBaseline,
+  FormHelperText,
 } from "@mui/material";
 import { styled } from "@mui/system";
 
@@ -35,6 +36,11 @@ const StyledButton = styled(Button)({
   marginTop: "1em",
 });
 
+const ErrorText = styled(FormHelperText)({
+  color: "red",
+  marginTop: "5px",
+});
+
 const Login = () => {
   const handleSubmit = (values, { setSubmitting }) => {
     alert("Login successful!");
@@ -53,27 +59,57 @@ const Login = () => {
         {({ isSubmitting }) => (
           <StyledForm>
             <div>
-              <StyledTextField
-                type="text"
-                id="username"
-                name="username"
-                label="Username"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="username" component="div" />
+              <Field name="username">
+                {({ field, meta }) => (
+                  <>
+                    <StyledTextField
+                      {...field}
+                      type="text"
+                      id="username"
+                      label="Username"
+                      variant="outlined"
+                      fullWidth
+                    />
+                    {meta.touched && meta.error && (
+                      <ErrorText
+                        style={{
+                          marginTop: "-10px",
+                          marginBottom: "15px",
+                        }}
+                      >
+                        {meta.error}
+                      </ErrorText>
+                    )}
+                  </>
+                )}
+              </Field>
             </div>
 
             <div>
-              <StyledTextField
-                type="password"
-                id="password"
-                name="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-              />
-              <ErrorMessage name="password" component="div" />
+              <Field name="password">
+                {({ field, meta }) => (
+                  <>
+                    <StyledTextField
+                      {...field}
+                      type="password"
+                      id="password"
+                      label="Password"
+                      variant="outlined"
+                      fullWidth
+                    />
+                    {meta.touched && meta.error && (
+                      <ErrorText
+                        style={{
+                          marginTop: "-10px",
+                          marginBottom: "15px",
+                        }}
+                      >
+                        {meta.error}
+                      </ErrorText>
+                    )}
+                  </>
+                )}
+              </Field>
             </div>
 
             <StyledButton
