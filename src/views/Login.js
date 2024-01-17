@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -43,13 +44,27 @@ const ErrorText = styled(FormHelperText)({
 });
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if username exists in localStorage
+    const username = localStorage.getItem("username");
+    if (username) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
   const handleSubmit = (values, { setSubmitting }) => {
     setTimeout(() => {
+      const { username } = values;
+      localStorage.setItem("username", username);
       Swal.fire({
         icon: "success",
         title: "Login Successful!",
         showConfirmButton: false,
         timer: 2000,
+      }).then(() => {
+        setSubmitting(false);
+        navigate("/dashboard");
       });
       setSubmitting(false);
     }, 1000);
