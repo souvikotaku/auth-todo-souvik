@@ -8,6 +8,7 @@ import {
   Typography,
   CssBaseline,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import Swal from "sweetalert2";
@@ -34,13 +35,24 @@ const StyledTextField = styled(TextField)({
   marginBottom: "1em",
 });
 
-const StyledButton = styled(Button)({
-  marginTop: "1em",
-});
-
 const ErrorText = styled(FormHelperText)({
   color: "red",
   marginTop: "5px",
+});
+
+const StyledButton = styled(Button)({
+  marginTop: "1em",
+  position: "relative", // Position relative for absolute positioning of loader
+  "&.loading": {
+    backgroundColor: "#4CAF50",
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+  },
 });
 
 const Login = () => {
@@ -140,8 +152,10 @@ const Login = () => {
               disabled={isSubmitting}
               variant="contained"
               color="primary"
+              className={isSubmitting ? "loading" : ""}
             >
-              Login
+              {isSubmitting && <CircularProgress size={20} color="inherit" />}
+              {!isSubmitting && "Login"}
             </StyledButton>
           </StyledForm>
         )}
