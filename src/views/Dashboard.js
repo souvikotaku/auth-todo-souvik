@@ -18,6 +18,12 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  useEffect(() => {
+    if (!localStorage.getItem("username")) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <StyledContainer component="main" maxWidth="xs">
       <CssBaseline />

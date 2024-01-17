@@ -61,7 +61,7 @@ const Login = () => {
         icon: "success",
         title: "Login Successful!",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 1800,
       }).then(() => {
         setSubmitting(false);
         navigate("/dashboard");
