@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Container,
@@ -18,12 +20,13 @@ import {
 } from "@mui/material";
 import { styled, useTheme } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
-import {
+import todoReducer, {
   addTodo,
   editTodo,
   deleteTodo,
   toggleComplete,
 } from "../redux/todoSlice";
+
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -51,6 +54,13 @@ const StyledTodo = styled(ListItem)(({ theme }) => ({
   width: "100%",
   maxWidth: "400px",
   maxWidth: "100% !important",
+  transition: "background-color 0.3s, box-shadow 0.3s",
+  cursor: "pointer",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Added box shadow
+  "&:hover": {
+    backgroundColor: "#e8e8e8",
+    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Box shadow on hover
+  },
   [theme.breakpoints.down("sm")]: {
     width: "80%",
     minWidth: "100%",
@@ -61,8 +71,12 @@ const TodoText = styled(ListItemText)({
   flex: "1",
   wordBreak: "break-word",
   textOverflow: "ellipsis",
+  "& > span": {
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
 });
-
 const ButtonsContainer = styled("div")({
   display: "flex",
   alignItems: "center",
@@ -82,17 +96,26 @@ const Dashboard = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const todoList = useSelector((state) => state.todos);
+
+  const notify = (message, type) => {
+    switch (type) {
+      case "success":
+        toast.success(message, { backgroundColor: "#5cb85c" }); // Green color for success
+        break;
+      case "error":
+        toast.error(message, { backgroundColor: "#d9534f" }); // Red color for error
+        break;
+      default:
+        toast(message);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("username");
-    localStorage.removeItem("todos");
     navigate("/");
   };
 
-  const [todoList, setTodoList] = useState(() => {
-    const storedTodos = localStorage.getItem("todos");
-    return storedTodos ? JSON.parse(storedTodos) : [];
-  });
   const [newTodo, setNewTodo] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -110,17 +133,12 @@ const Dashboard = () => {
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       if (editingIndex !== null) {
-        // Update existing todo
-        const updatedTodos = [...todoList];
-        updatedTodos[editingIndex] = { text: newTodo, completed: false };
-        setTodoList(updatedTodos);
         dispatch(editTodo({ index: editingIndex, text: newTodo }));
         setEditingIndex(null);
+        notify("Todo edited successfully");
       } else {
-        // Add new todo
-        const updatedTodos = [...todoList, { text: newTodo, completed: false }];
-        setTodoList(updatedTodos);
         dispatch(addTodo({ text: newTodo, completed: false }));
+        notify("Todo added successfully", "success");
       }
       setNewTodo("");
     }
@@ -132,23 +150,17 @@ const Dashboard = () => {
   };
 
   const handleDeleteTodo = (index) => {
-    // Delete todo
-    const updatedTodos = todoList.filter((_, i) => i !== index);
-    setTodoList(updatedTodos);
     dispatch(deleteTodo(index));
+    notify("Todo deleted successfully");
   };
 
   const handleCompleteTodo = (index) => {
-    // Toggle completion status
-    const updatedTodos = [...todoList];
-    updatedTodos[index].completed = !updatedTodos[index]?.completed;
-    setTodoList(updatedTodos);
     dispatch(toggleComplete(index));
+    const action = todoList[index]?.completed
+      ? "marked incomplete"
+      : "marked complete";
+    notify(`Todo ${action}`, todoList[index]?.completed ? "error" : "success");
   };
-
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todoList));
-  }, [todoList]);
 
   useEffect(() => {
     if (!localStorage.getItem("username")) {
@@ -158,6 +170,7 @@ const Dashboard = () => {
 
   return (
     <div>
+      <ToastContainer position="top-right" autoClose={3000} />
       <AppBar position="static">
         <Toolbar>
           <>
