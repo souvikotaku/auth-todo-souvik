@@ -1,0 +1,20 @@
+/* Dashboard.css */
+
+.custom-container {
+  max-width: 100% !important; /* Set width to 100% by default */
+}
+.desktop-textfield {
+  width: 400px !important; /* Adjust the width as needed */
+  margin-right: 15px; /* Add margin for spacing */
+}
+
+.mobile-todo-grid {
+  width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+  .custom-container {
+    max-width: none !important; /* Remove max-width for mobile view */
+    margin: 0 auto;
+  }
+}

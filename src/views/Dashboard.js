@@ -14,6 +14,7 @@ import {
   Toolbar,
   Drawer,
   useMediaQuery,
+  Grid,
 } from "@mui/material";
 import { styled, useTheme } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import MenuIcon from "@mui/icons-material/Menu";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+
+import "./Dashboard.css";
 
 const StyledContainer = styled(Container)({
   display: "flex",
@@ -47,12 +50,11 @@ const StyledTodo = styled(ListItem)(({ theme }) => ({
   backgroundColor: "#f9f9f9",
   width: "100%", // Set width to 100%
   maxWidth: "400px", // Set a fixed maxWidth based on your preference
-  minWidth: "400px",
+  // minWidth: "400px",
+  maxWidth: "100% !important",
   [theme.breakpoints.down("sm")]: {
     width: "80%", // Set width to 80% for mobile view
-    maxWidth: "none", // Remove maxWidth for mobile view
-    minWidth: "none", // Remove minWidth for mobile view
-    margin: "0 auto",
+    minWidth: "100%", // Remove minWidth for mobile view
   },
 }));
 
@@ -66,6 +68,15 @@ const ButtonsContainer = styled("div")({
   display: "flex",
   alignItems: "center",
   gap: "10px",
+});
+
+const StyledGrid = styled(Grid)({
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  alignItems: "stretch",
+  marginTop: "15px",
 });
 
 const Dashboard = () => {
@@ -163,7 +174,11 @@ const Dashboard = () => {
           </div>
         </Drawer>
       )}
-      <StyledContainer component="main" maxWidth="xs">
+      <StyledContainer
+        component="main"
+        maxWidth="xs"
+        className="custom-container"
+      >
         <CssBaseline />
         <Typography variant="h5">Dashboard</Typography>
 
@@ -174,47 +189,56 @@ const Dashboard = () => {
           fullWidth
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
+          className={!isMobileView ? "desktop-textfield" : ""}
         />
 
         <Button onClick={handleAddTodo} variant="contained" color="primary">
           {editingIndex !== null ? "Edit Todo" : "Add Todo"}
         </Button>
 
-        <List>
+        <StyledGrid container spacing={2}>
           {todoList.map((todo, index) => (
-            <StyledTodo key={index}>
-              <TodoText
-                primary={todo.text}
-                secondary={todo.completed ? "Completed" : "Incomplete"}
-                style={{
-                  textDecoration: todo.completed ? "line-through" : "none",
-                }}
-              />
-              <ButtonsContainer>
-                <IconButton
-                  onClick={() => handleEditTodo(index)}
-                  aria-label="edit"
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleDeleteTodo(index)}
-                  aria-label="delete"
-                >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleCompleteTodo(index)}
-                  aria-label="complete"
-                >
-                  <CheckCircleOutlineIcon
-                    style={{ color: todo.completed ? "green" : "inherit" }}
-                  />
-                </IconButton>
-              </ButtonsContainer>
-            </StyledTodo>
+            <Grid
+              item
+              md={3}
+              sm={12}
+              key={index}
+              className={isMobileView ? "mobile-todo-grid" : ""}
+            >
+              <StyledTodo key={index}>
+                <TodoText
+                  primary={todo.text}
+                  secondary={todo.completed ? "Completed" : "Incomplete"}
+                  style={{
+                    textDecoration: todo.completed ? "line-through" : "none",
+                  }}
+                />
+                <ButtonsContainer>
+                  <IconButton
+                    onClick={() => handleEditTodo(index)}
+                    aria-label="edit"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDeleteTodo(index)}
+                    aria-label="delete"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleCompleteTodo(index)}
+                    aria-label="complete"
+                  >
+                    <CheckCircleOutlineIcon
+                      style={{ color: todo.completed ? "green" : "inherit" }}
+                    />
+                  </IconButton>
+                </ButtonsContainer>
+              </StyledTodo>
+            </Grid>
           ))}
-        </List>
+        </StyledGrid>
       </StyledContainer>
     </div>
   );
