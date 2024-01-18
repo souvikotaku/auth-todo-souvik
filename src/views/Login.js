@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import retro from "../assets/retro.gif";
 import cyberpunk from "../assets/cyberpunk.png";
 import cyberblack from "../assets/cyberblack.png";
+import backgroundMusic from "../assets/afterdark.mp3";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -97,6 +98,20 @@ const StyledButton = styled(Button)({
 const Login = () => {
   const navigate = useNavigate();
   const isMobileView = useMediaQuery("(max-width:600px)");
+
+  useEffect(() => {
+    // Play background music
+    const audio = new Audio(backgroundMusic);
+    audio.loop = true;
+
+    audio.play();
+
+    return () => {
+      // Stop background music when leaving the login page
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
 
   useEffect(() => {
     // Check if username exists in localStorage

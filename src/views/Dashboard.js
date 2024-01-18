@@ -37,6 +37,7 @@ import dashback from "../assets/dashback2.mp4";
 import logo from "../assets/umbrella.png";
 import Swal from "sweetalert2";
 import Tooltip from "@mui/material/Tooltip";
+import backgroundMusic from "../assets/resonance.mp3";
 
 import "./Dashboard.css";
 
@@ -229,6 +230,20 @@ const Dashboard = () => {
       : "marked complete";
     notify(`Todo ${action}`, todoList[index]?.completed ? "error" : "success");
   };
+
+  useEffect(() => {
+    // Play background music
+    const audio = new Audio(backgroundMusic);
+    audio.loop = true;
+
+    audio.play();
+
+    return () => {
+      // Stop background music when leaving the login page
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
 
   useEffect(() => {
     if (!localStorage.getItem("username")) {
