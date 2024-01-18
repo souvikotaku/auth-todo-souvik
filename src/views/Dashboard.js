@@ -48,19 +48,18 @@ const StyledTodo = styled(ListItem)(({ theme }) => ({
   borderRadius: "8px",
   marginBottom: "15px",
   backgroundColor: "#f9f9f9",
-  width: "100%", // Set width to 100%
-  maxWidth: "400px", // Set a fixed maxWidth based on your preference
-  // minWidth: "400px",
+  width: "100%",
+  maxWidth: "400px",
   maxWidth: "100% !important",
   [theme.breakpoints.down("sm")]: {
-    width: "80%", // Set width to 80% for mobile view
-    minWidth: "100%", // Remove minWidth for mobile view
+    width: "80%",
+    minWidth: "100%",
   },
 }));
 
 const TodoText = styled(ListItemText)({
   flex: "1",
-  wordBreak: "break-word", // Add this property
+  wordBreak: "break-word",
   textOverflow: "ellipsis",
 });
 
@@ -82,14 +81,18 @@ const StyledGrid = styled(Grid)({
 const Dashboard = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const todoList = useSelector((state) => state.todos);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("username");
+    localStorage.removeItem("todos");
     navigate("/");
   };
 
+  const [todoList, setTodoList] = useState(() => {
+    const storedTodos = localStorage.getItem("todos");
+    return storedTodos ? JSON.parse(storedTodos) : [];
+  });
   const [newTodo, setNewTodo] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -107,9 +110,16 @@ const Dashboard = () => {
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       if (editingIndex !== null) {
+        // Update existing todo
+        const updatedTodos = [...todoList];
+        updatedTodos[editingIndex] = { text: newTodo, completed: false };
+        setTodoList(updatedTodos);
         dispatch(editTodo({ index: editingIndex, text: newTodo }));
         setEditingIndex(null);
       } else {
+        // Add new todo
+        const updatedTodos = [...todoList, { text: newTodo, completed: false }];
+        setTodoList(updatedTodos);
         dispatch(addTodo({ text: newTodo, completed: false }));
       }
       setNewTodo("");
@@ -122,12 +132,23 @@ const Dashboard = () => {
   };
 
   const handleDeleteTodo = (index) => {
+    // Delete todo
+    const updatedTodos = todoList.filter((_, i) => i !== index);
+    setTodoList(updatedTodos);
     dispatch(deleteTodo(index));
   };
 
   const handleCompleteTodo = (index) => {
+    // Toggle completion status
+    const updatedTodos = [...todoList];
+    updatedTodos[index].completed = !updatedTodos[index].completed;
+    setTodoList(updatedTodos);
     dispatch(toggleComplete(index));
   };
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todoList));
+  }, [todoList]);
 
   useEffect(() => {
     if (!localStorage.getItem("username")) {
@@ -180,7 +201,8 @@ const Dashboard = () => {
         className="custom-container"
       >
         <CssBaseline />
-        <Typography variant="h5">Dashboard</Typography>
+        <Typography variant="h6">Welcome!</Typography>
+        <Typography variant="h5">{localStorage.getItem("username")}</Typography>
 
         <TextField
           label="Add Todo"
