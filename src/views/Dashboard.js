@@ -20,12 +20,37 @@ import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import MenuIcon from "@mui/icons-material/Menu";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const StyledContainer = styled(Container)({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   marginTop: "50px",
+});
+
+const StyledTodo = styled(ListItem)({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: "15px",
+  border: "1px solid #ddd",
+  borderRadius: "8px",
+  marginBottom: "15px",
+  backgroundColor: "#f9f9f9",
+});
+
+const TodoText = styled(ListItemText)({
+  flex: "1",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+});
+
+const ButtonsContainer = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
 });
 
 const Dashboard = () => {
@@ -55,12 +80,12 @@ const Dashboard = () => {
       if (editingIndex !== null) {
         // Editing existing todo
         const updatedTodoList = [...todoList];
-        updatedTodoList[editingIndex] = newTodo;
+        updatedTodoList[editingIndex] = { text: newTodo, completed: false };
         setTodoList(updatedTodoList);
         setEditingIndex(null);
       } else {
         // Adding new todo
-        setTodoList([...todoList, newTodo]);
+        setTodoList([...todoList, { text: newTodo, completed: false }]);
       }
 
       // Clear input field
@@ -69,7 +94,7 @@ const Dashboard = () => {
   };
 
   const handleEditTodo = (index) => {
-    setNewTodo(todoList[index]);
+    setNewTodo(todoList[index].text);
     setEditingIndex(index);
   };
 
@@ -85,6 +110,15 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
+  const handleCompleteTodo = (index) => {
+    const updatedTodoList = [...todoList];
+    updatedTodoList[index] = {
+      ...todoList[index],
+      completed: !todoList[index].completed,
+    };
+    setTodoList(updatedTodoList);
+  };
+
   return (
     <div>
       <AppBar position="static">
@@ -95,7 +129,7 @@ const Dashboard = () => {
               alt="logo"
               style={{ marginRight: "10px" }}
             />
-            <Typography variant="h6">Hello</Typography>
+            <Typography variant="h6">Souvik's todo list</Typography>
           </>
           <div style={{ flexGrow: 1 }} />
           {isMobileView ? (
@@ -121,18 +155,12 @@ const Dashboard = () => {
             <Typography variant="h6" style={{ margin: "20px" }}>
               Hello
             </Typography>
-            {/* <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button> */}
           </div>
         </Drawer>
       )}
       <StyledContainer component="main" maxWidth="xs">
         <CssBaseline />
         <Typography variant="h5">Dashboard</Typography>
-        {/* <Button onClick={handleLogout} variant="contained" color="primary">
-          Logout
-        </Button> */}
 
         <TextField
           label="Add Todo"
@@ -149,25 +177,37 @@ const Dashboard = () => {
 
         <List>
           {todoList.map((todo, index) => (
-            <ListItem key={index}>
-              <ListItemText primary={todo} />
-              <ListItemSecondaryAction>
+            <StyledTodo key={index}>
+              <TodoText
+                primary={todo.text}
+                secondary={todo.completed ? "Completed" : "Incomplete"}
+                style={{
+                  textDecoration: todo.completed ? "line-through" : "none",
+                }}
+              />
+              <ButtonsContainer>
                 <IconButton
                   onClick={() => handleEditTodo(index)}
-                  edge="end"
                   aria-label="edit"
                 >
                   <EditIcon />
                 </IconButton>
                 <IconButton
                   onClick={() => handleDeleteTodo(index)}
-                  edge="end"
                   aria-label="delete"
                 >
                   <DeleteIcon />
                 </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
+                <IconButton
+                  onClick={() => handleCompleteTodo(index)}
+                  aria-label="complete"
+                >
+                  <CheckCircleOutlineIcon
+                    style={{ color: todo.completed ? "green" : "inherit" }}
+                  />
+                </IconButton>
+              </ButtonsContainer>
+            </StyledTodo>
           ))}
         </List>
       </StyledContainer>
