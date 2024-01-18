@@ -9,10 +9,14 @@ import {
   CssBaseline,
   FormHelperText,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import retro from "../assets/retro.gif";
+import cyberpunk from "../assets/cyberpunk.png";
+import cyberblack from "../assets/cyberblack.png";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -24,6 +28,10 @@ const StyledContainer = styled(Container)({
   flexDirection: "column",
   alignItems: "center",
   marginTop: "50px",
+  position: "relative",
+  background: `url(${retro}) no-repeat center center fixed`,
+  backgroundSize: "cover",
+  minHeight: "100vh",
 });
 
 const StyledForm = styled(Form)({
@@ -33,11 +41,30 @@ const StyledForm = styled(Form)({
 
 const StyledTextField = styled(TextField)({
   marginBottom: "1em",
+  "& .MuiOutlinedInput-root": {
+    background: "#4A235A",
+    "& fieldset": {
+      borderColor: "pink",
+    },
+    "&:hover fieldset": {
+      borderColor: "#39FF14",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#39FF14",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "pink",
+  },
+  "& .MuiOutlinedInput-input": {
+    color: "pink",
+  },
 });
 
 const ErrorText = styled(FormHelperText)({
-  color: "red",
+  color: "yellow",
   marginTop: "5px",
+  fontWeight: "bold",
 });
 
 const StyledButton = styled(Button)({
@@ -57,6 +84,7 @@ const StyledButton = styled(Button)({
 
 const Login = () => {
   const navigate = useNavigate();
+  const isMobileView = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
     // Check if username exists in localStorage
@@ -83,9 +111,15 @@ const Login = () => {
   };
 
   return (
-    <StyledContainer component="main" maxWidth="xs">
+    <StyledContainer
+      component="main"
+      maxWidth="xs"
+      className="custom-container-login"
+    >
       <CssBaseline />
-      <Typography variant="h5">Login</Typography>
+      {/* <Typography variant="h5">Login</Typography> */}
+      {/* <StyledTypography variant="h5">Blade Runner</StyledTypography> */}
+      <img src={cyberblack} className="cyberimg" />
       <Formik
         initialValues={{ username: "", password: "" }}
         validationSchema={validationSchema}
@@ -93,7 +127,7 @@ const Login = () => {
       >
         {({ isSubmitting }) => (
           <StyledForm>
-            <div>
+            <div className="fieldlogin1">
               <Field name="username">
                 {({ field, meta }) => (
                   <>
@@ -120,7 +154,7 @@ const Login = () => {
               </Field>
             </div>
 
-            <div>
+            <div className="fieldlogin">
               <Field name="password">
                 {({ field, meta }) => (
                   <>

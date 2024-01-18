@@ -3,6 +3,26 @@
 .custom-container {
   max-width: 100% !important; /* Set width to 100% by default */
 }
+
+.custom-container-login {
+  max-width: 100% !important;
+  margin-top: 0px !important;
+  padding-top: 50px;
+}
+
+.fieldlogin1 {
+  @media (orientation: landscape) {
+    width: 444px;
+    margin: auto !important;
+    margin-top: -5% !important;
+  }
+}
+.fieldlogin {
+  @media (orientation: landscape) {
+    width: 444px;
+    margin: auto !important;
+  }
+}
 .desktop-textfield {
   width: 400px !important; /* Adjust the width as needed */
   margin-right: 15px; /* Add margin for spacing */
@@ -24,6 +44,15 @@
     width: 80%;
     margin: auto !important;
     word-break: break-word;
+  }
+}
+.cyberimg {
+  @media (orientation: portrait) {
+    width: 100%;
+    margin-top: 10%;
+  }
+  @media (orientation: landscape) {
+    margin-top: -5%;
   }
 }
 

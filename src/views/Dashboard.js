@@ -347,35 +347,35 @@ const Dashboard = () => {
           value={newTodo}
           onChange={(e) => {
             setNewTodo(e.target.value);
-            setAddTodoError(""); // Reset the error when the user types
+            setAddTodoError("");
           }}
           className={!isMobileView ? "desktop-textfield" : ""}
           error={Boolean(addTodoError)}
           helperText={addTodoError}
           sx={{
             "& .MuiOutlinedInput-root": {
-              background: "black", // Change background color
+              background: "black",
               "& fieldset": {
-                borderColor: "#39FF14", // Change border color
+                borderColor: "#39FF14",
               },
               "&:hover fieldset": {
-                borderColor: "#39FF14", // Change border color on hover
+                borderColor: "#39FF14",
               },
               "&.Mui-focused fieldset": {
-                borderColor: "#39FF14", // Change border color when focused
+                borderColor: "#39FF14",
               },
             },
             "& .MuiInputLabel-root": {
-              color: "#39FF14", // Change label color
+              color: "#39FF14",
             },
             "& .MuiOutlinedInput-input": {
-              color: "#39FF14", // Change input text color
+              color: "#39FF14",
             },
             "& .MuiFormHelperText-root": {
-              color: "white", // Change the color of the general error text
+              color: "white",
             },
             "&.Mui-error .MuiFormHelperText-root": {
-              color: "white", // Change the color of the specific error text
+              color: "white",
             },
           }}
         />
