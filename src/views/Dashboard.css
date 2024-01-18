@@ -17,6 +17,15 @@
   width: 100%;
   max-height: 55vh;
 }
+.usernameline {
+  color: rgb(46, 204, 113);
+
+  @media (orientation: portrait) {
+    width: 80%;
+    margin: auto !important;
+    word-break: break-word;
+  }
+}
 
 @media screen and (max-width: 600px) {
   .custom-container {
