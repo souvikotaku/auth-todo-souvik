@@ -129,8 +129,7 @@ const Login = () => {
       className="custom-container-login"
     >
       <CssBaseline />
-      {/* <Typography variant="h5">Login</Typography> */}
-      {/* <StyledTypography variant="h5">Blade Runner</StyledTypography> */}
+
       <img src={cyberblack} className="cyberimg" />
       <Formik
         initialValues={{ username: "", password: "" }}
