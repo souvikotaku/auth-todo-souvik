@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -38,6 +38,10 @@ import logo from "../assets/umbrella.png";
 import Swal from "sweetalert2";
 import Tooltip from "@mui/material/Tooltip";
 import backgroundMusic from "../assets/resonance.mp3";
+import MoodBadIcon from "@mui/icons-material/MoodBad";
+import MoodIcon from "@mui/icons-material/Mood";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 
 import "./Dashboard.css";
 
@@ -117,6 +121,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const todoList = useSelector((state) => state.todos);
 
+  const audioRef = useRef(null);
+
   const notify = (message, type) => {
     switch (type) {
       case "success":
@@ -141,6 +147,7 @@ const Dashboard = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [addTodoError, setAddTodoError] = useState("");
+  const [playing, setPlaying] = useState(true);
 
   const handleLogout = () => {
     Swal.fire({
@@ -232,17 +239,24 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // Play background music
-    const audio = new Audio(backgroundMusic);
+    const audio = audioRef.current || new Audio(backgroundMusic);
     audio.loop = true;
+    if (audio) {
+      // Play the audio by default when the component mounts
+      audio.play();
 
-    audio.play();
+      audio.onended = () => {
+        audio.pause();
+        audio.currentTime = 0;
+        setPlaying(false);
+      };
 
-    return () => {
-      // Stop background music when leaving the login page
-      audio.pause();
-      audio.currentTime = 0;
-    };
+      // Save the audio reference
+      audioRef.current = audio;
+
+      // Set the initial playing state to true
+      setPlaying(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -250,6 +264,28 @@ const Dashboard = () => {
       navigate("/");
     }
   }, [navigate]);
+
+  const handlePlayPause = () => {
+    const audio = audioRef.current || new Audio(backgroundMusic);
+
+    if (audio) {
+      if (playing) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      setPlaying(!playing);
+
+      audio.onended = () => {
+        audio.pause();
+        audio.currentTime = 0;
+        setPlaying(false);
+      };
+
+      // Save the audio reference
+      audioRef.current = audio;
+    }
+  };
 
   return (
     <div>
@@ -271,18 +307,87 @@ const Dashboard = () => {
           </>
           <div style={{ flexGrow: 1 }} />
           {isMobileView ? (
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleDrawerOpen}
-            >
-              <MenuIcon />
-            </IconButton>
+            <>
+              <IconButton
+                color="inherit"
+                aria-label="play-pause"
+                onClick={handlePlayPause}
+              >
+                {/* {playing ? (
+                  <PauseCircleOutlineIcon />
+                ) : (
+                  <PlayCircleOutlineIcon />
+                )} */}
+
+                {playing ? (
+                  <>
+                    <PauseCircleOutlineIcon />
+                  </>
+                ) : (
+                  <>
+                    <PlayCircleOutlineIcon />
+                  </>
+                )}
+              </IconButton>
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleDrawerOpen}
+              >
+                <MenuIcon />
+              </IconButton>
+            </>
           ) : (
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
+            <>
+              <IconButton
+                color="inherit"
+                aria-label="play-pause"
+                onClick={handlePlayPause}
+              >
+                {/* {playing ? (
+                  <PauseCircleOutlineIcon />
+                ) : (
+                  <PlayCircleOutlineIcon />
+                )} */}
+
+                {playing ? (
+                  <>
+                    <Typography
+                      variant="h6"
+                      style={{
+                        paddingRight: "5px",
+                        fontSize: "17px",
+                      }}
+                    >
+                      Pause music
+                    </Typography>
+                    <Tooltip title={"Pause music"} arrow>
+                      <PauseCircleOutlineIcon />
+                    </Tooltip>
+                  </>
+                ) : (
+                  <>
+                    <Typography
+                      variant="h6"
+                      style={{
+                        paddingRight: "5px",
+                        fontSize: "17px",
+                      }}
+                    >
+                      Play music
+                    </Typography>
+                    <Tooltip title={"Play music"} arrow>
+                      <PlayCircleOutlineIcon />
+                    </Tooltip>
+                  </>
+                )}
+              </IconButton>
+
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
           )}
         </Toolbar>
       </AppBar>
@@ -355,7 +460,7 @@ const Dashboard = () => {
           // value={newTodo}
           // onChange={(e) => setNewTodo(e.target.value)}
           // className={!isMobileView ? "desktop-textfield" : ""}
-          label="Add Todo"
+          label={editingIndex !== null ? "Edit Todo" : "Add Todo"}
           variant="outlined"
           margin="normal"
           fullWidth
@@ -488,11 +593,16 @@ const Dashboard = () => {
                           onClick={() => handleCompleteTodo(index)}
                           aria-label="complete"
                         >
-                          <CheckCircleOutlineIcon
+                          {/* <CheckCircleOutlineIcon
                             style={{
                               color: todo?.completed ? "green" : "inherit",
                             }}
-                          />
+                          /> */}
+                          {todo?.completed ? (
+                            <MoodIcon style={{ color: "green" }} />
+                          ) : (
+                            <MoodBadIcon style={{ color: "red" }} />
+                          )}
                         </IconButton>
                       </Tooltip>
                     </ButtonsContainer>
