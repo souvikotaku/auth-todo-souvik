@@ -15,7 +15,14 @@ import {
   Drawer,
   useMediaQuery,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled, useTheme } from "@mui/system";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTodo,
+  editTodo,
+  deleteTodo,
+  toggleComplete,
+} from "../redux/todoSlice";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -29,7 +36,7 @@ const StyledContainer = styled(Container)({
   marginTop: "50px",
 });
 
-const StyledTodo = styled(ListItem)({
+const StyledTodo = styled(ListItem)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -38,12 +45,20 @@ const StyledTodo = styled(ListItem)({
   borderRadius: "8px",
   marginBottom: "15px",
   backgroundColor: "#f9f9f9",
-});
+  width: "100%", // Set width to 100%
+  maxWidth: "400px", // Set a fixed maxWidth based on your preference
+  minWidth: "400px",
+  [theme.breakpoints.down("sm")]: {
+    width: "80%", // Set width to 80% for mobile view
+    maxWidth: "none", // Remove maxWidth for mobile view
+    minWidth: "none", // Remove minWidth for mobile view
+    margin: "0 auto",
+  },
+}));
 
 const TodoText = styled(ListItemText)({
   flex: "1",
-  overflow: "hidden",
-  whiteSpace: "nowrap",
+  wordBreak: "break-word", // Add this property
   textOverflow: "ellipsis",
 });
 
@@ -54,6 +69,9 @@ const ButtonsContainer = styled("div")({
 });
 
 const Dashboard = () => {
+  const theme = useTheme();
+  const dispatch = useDispatch();
+  const todoList = useSelector((state) => state.todos);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -61,7 +79,6 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const [todoList, setTodoList] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -75,20 +92,15 @@ const Dashboard = () => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       if (editingIndex !== null) {
-        // Editing existing todo
-        const updatedTodoList = [...todoList];
-        updatedTodoList[editingIndex] = { text: newTodo, completed: false };
-        setTodoList(updatedTodoList);
+        dispatch(editTodo({ index: editingIndex, text: newTodo }));
         setEditingIndex(null);
       } else {
-        // Adding new todo
-        setTodoList([...todoList, { text: newTodo, completed: false }]);
+        dispatch(addTodo({ text: newTodo, completed: false }));
       }
-
-      // Clear input field
       setNewTodo("");
     }
   };
@@ -99,9 +111,11 @@ const Dashboard = () => {
   };
 
   const handleDeleteTodo = (index) => {
-    const updatedTodoList = [...todoList];
-    updatedTodoList.splice(index, 1);
-    setTodoList(updatedTodoList);
+    dispatch(deleteTodo(index));
+  };
+
+  const handleCompleteTodo = (index) => {
+    dispatch(toggleComplete(index));
   };
 
   useEffect(() => {
@@ -109,15 +123,6 @@ const Dashboard = () => {
       navigate("/");
     }
   }, [navigate]);
-
-  const handleCompleteTodo = (index) => {
-    const updatedTodoList = [...todoList];
-    updatedTodoList[index] = {
-      ...todoList[index],
-      completed: !todoList[index].completed,
-    };
-    setTodoList(updatedTodoList);
-  };
 
   return (
     <div>
