@@ -69,7 +69,19 @@ const ErrorText = styled(FormHelperText)({
 
 const StyledButton = styled(Button)({
   marginTop: "1em",
-  position: "relative", // Position relative for absolute positioning of loader
+  width: "200px",
+  borderRadius: "70px",
+  background: "purple",
+  color: "yellow",
+  transition: "background 0.3s, color 0.3s, box-shadow 0.3s",
+
+  "&:hover": {
+    background: "yellow",
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.3)",
+    color: "purple",
+  },
+
+  position: "relative",
   "&.loading": {
     backgroundColor: "#4CAF50",
     "&::after": {
