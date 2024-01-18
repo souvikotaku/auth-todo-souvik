@@ -1,14 +1,13 @@
 Made this todo app with auth for interview project purpose. You can login with any credential, after login you can play with the todo list. The site is deployed here
 # https://souvik-authtodo-project.netlify.app/
 
-# Getting Started with Create React App
-
 This website has protected routes, you have to logout to go to the login page again and you have to login to go to dashboard, no other way.
 Styling done by material ui and vanilla css
 state management via redux.
 The theme of this site is very cyberpunk, you'll like it, 
 also i have added background music which keeps looping.
 
+# Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
