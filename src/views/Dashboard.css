@@ -11,6 +11,12 @@
 .mobile-todo-grid {
   width: 100%;
 }
+.scrolldiv {
+  flex-grow: 1;
+  overflow-y: auto;
+  width: 100%;
+  max-height: 55vh;
+}
 
 @media screen and (max-width: 600px) {
   .custom-container {
