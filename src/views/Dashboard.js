@@ -35,11 +35,22 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import "./Dashboard.css";
 
+// const StyledContainer = styled(Container)({
+//   display: "flex",
+//   flexDirection: "column",
+//   alignItems: "center",
+//   marginTop: "50px",
+// });
+
 const StyledContainer = styled(Container)({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   marginTop: "50px",
+  background: 'url("your-gif-url-here") center center fixed',
+  backgroundSize: "cover",
+  minHeight: "100vh",
+  overflow: "hidden",
 });
 
 const StyledTodo = styled(ListItem)(({ theme, completed, isDeleting }) => ({
@@ -50,7 +61,7 @@ const StyledTodo = styled(ListItem)(({ theme, completed, isDeleting }) => ({
   border: "1px solid #ddd",
   borderRadius: "8px",
   marginBottom: "15px",
-  backgroundColor: completed ? "#58D68D" : "#F2E79F", // Green color for completed, greyish yellow for incomplete
+  backgroundColor: completed ? "#58D68D" : "#F2E79F",
   width: "100%",
   maxWidth: "400px",
   maxWidth: "100% !important",
@@ -58,12 +69,14 @@ const StyledTodo = styled(ListItem)(({ theme, completed, isDeleting }) => ({
   cursor: "pointer",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 
-  opacity: isDeleting ? 0 : 1, // Set opacity to 0 during deletion
-  maxHeight: isDeleting ? 0 : "100px", // Set max height to 0 during deletion
-  overflow: "hidden", // Hide overflow during deletion
+  //animation on delete
+  opacity: isDeleting ? 0 : 1,
+  maxHeight: isDeleting ? 0 : "100px",
+  overflow: "hidden",
   transition: "opacity 0.5s, max-height 0.5s",
+  //animation on delete
+
   "&:hover": {
-    // Darker green color on hover for completed, lighter grey for incomplete
     boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
     marginTop: "-5px",
   },
