@@ -141,7 +141,7 @@ const Dashboard = () => {
   const handleCompleteTodo = (index) => {
     // Toggle completion status
     const updatedTodos = [...todoList];
-    updatedTodos[index].completed = !updatedTodos[index].completed;
+    updatedTodos[index].completed = !updatedTodos[index]?.completed;
     setTodoList(updatedTodos);
     dispatch(toggleComplete(index));
   };
@@ -229,10 +229,10 @@ const Dashboard = () => {
             >
               <StyledTodo key={index}>
                 <TodoText
-                  primary={todo.text}
-                  secondary={todo.completed ? "Completed" : "Incomplete"}
+                  primary={todo?.text}
+                  secondary={todo?.completed ? "Completed" : "Incomplete"}
                   style={{
-                    textDecoration: todo.completed ? "line-through" : "none",
+                    textDecoration: todo?.completed ? "line-through" : "none",
                   }}
                 />
                 <ButtonsContainer>
@@ -253,7 +253,7 @@ const Dashboard = () => {
                     aria-label="complete"
                   >
                     <CheckCircleOutlineIcon
-                      style={{ color: todo.completed ? "green" : "inherit" }}
+                      style={{ color: todo?.completed ? "green" : "inherit" }}
                     />
                   </IconButton>
                 </ButtonsContainer>

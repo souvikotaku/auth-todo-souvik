@@ -17,7 +17,7 @@ const todoSlice = createSlice({
       state.splice(action.payload, 1);
     },
     toggleComplete: (state, action) => {
-      state[action.payload].completed = !state[action.payload].completed;
+      state[action.payload].completed = !state[action.payload]?.completed;
     },
   },
 });
