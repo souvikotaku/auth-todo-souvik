@@ -523,11 +523,16 @@ const Dashboard = () => {
                         onClick={() => handleCompleteTodo(index)}
                         aria-label="complete"
                       >
-                        <CheckCircleOutlineIcon
+                        {/* <CheckCircleOutlineIcon
                           style={{
                             color: todo?.completed ? "green" : "inherit",
                           }}
-                        />
+                        /> */}
+                        {todo?.completed ? (
+                          <MoodIcon style={{ color: "green" }} />
+                        ) : (
+                          <MoodBadIcon style={{ color: "red" }} />
+                        )}
                       </IconButton>
                     </ButtonsContainer>
                   )}
