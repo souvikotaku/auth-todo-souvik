@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import {
@@ -12,12 +12,17 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import retro from "../assets/retro.gif";
 import cyberpunk from "../assets/cyberpunk.png";
 import cyberblack from "../assets/cyberblack.png";
 import backgroundMusic from "../assets/afterdark.mp3";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -98,6 +103,8 @@ const StyledButton = styled(Button)({
 const Login = () => {
   const navigate = useNavigate();
   const isMobileView = useMediaQuery("(max-width:600px)");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     // Play background music
@@ -180,18 +187,39 @@ const Login = () => {
               </Field>
             </div>
 
-            <div className="fieldlogin">
+            <div className="fieldlogin" style={{ position: "relative" }}>
               <Field name="password">
                 {({ field, meta }) => (
                   <>
                     <StyledTextField
                       {...field}
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       label="Password"
                       variant="outlined"
                       fullWidth
                     />
+                    <Tooltip
+                      title={showPassword ? "Hide Password" : "Show Password"}
+                      arrow
+                    >
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                          position: "absolute",
+                          right: "5px",
+                          top: "40%",
+                          transform: "translateY(-50%)",
+                          color: "pink",
+                        }}
+                      >
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </IconButton>
+                    </Tooltip>
                     {meta.touched && meta.error && (
                       <ErrorText
                         style={{
