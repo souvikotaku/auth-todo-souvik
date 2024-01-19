@@ -328,7 +328,7 @@ const Dashboard = () => {
         className="custom-container"
       >
         <CssBaseline />
-        <div style={{ zIndex: 1 }}>
+        <div style={{ zIndex: 1, width: "100%" }}>
           <Typography
             variant="h6"
             style={{ color: "#2ECC71", width: "80%", margin: "0 auto" }}
