@@ -389,10 +389,10 @@ const Dashboard = () => {
               color: "#39FF14",
             },
             "& .MuiFormHelperText-root": {
-              color: "white",
+              color: "green", // Set the color to green for the error message
             },
             "&.Mui-error .MuiFormHelperText-root": {
-              color: "white",
+              color: "green", // Set the color to green for the error message in error state
             },
           }}
         />
